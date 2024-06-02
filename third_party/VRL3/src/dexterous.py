@@ -18,7 +18,7 @@ import gym
 
 from mjrl.utils.gym_env import GymEnv
 # from rrl_local.rrl_utils import make_basic_env, make_dir
-from rrl_local.rrl_multicam import BasicAdroitEnv, BasicFrankaEnv
+from rrl_local.rrl_multicam import BasicDexterousEnv, BasicFrankaEnv
 
 # similar to dmc.py, we will have environment wrapper here...
 
@@ -41,7 +41,7 @@ class ExtendedTimeStep(NamedTuple):
     def __getitem__(self, attr):
         return getattr(self, attr)
 
-class ExtendedTimeStepAdroit(NamedTuple):
+class ExtendedTimeStepDexterous(NamedTuple):
     step_type: Any
     reward: Any
     discount: Any
@@ -218,33 +218,25 @@ def make_basic_env(env, cam_list=[], from_pixels=False, hybrid_state=None, test_
         width = 84
         latent_dim = height*width*len(cam_list)*3
         # RRL class instance is environment wrapper...
-        e = BasicAdroitEnv(e, cameras=cam_list,
+        e = BasicDexterousEnv(e, cameras=cam_list,
             height=height, width=width, latent_dim=latent_dim, hybrid_state=hybrid_state, 
             test_image=test_image, channels_first=channels_first, num_repeats=num_repeats, num_frames=num_frames)
         env_kwargs = {'rrl_kwargs' : e.env_kwargs}
     # if not from pixels... then it's simpler
     return e, env_kwargs
 
-class AdroitEnv:
-    # a wrapper class that will make Adroit env looks like a dmc env
+class DexterousEnv:
+    # a wrapper class that will make Dexterous env looks like a dmc env
     def __init__(self, env_name, test_image=False, cam_list=None,
         num_repeats=2, num_frames=3, env_feature_type='pixels', device=None, reward_rescale=False): 
         default_env_to_cam_list = {
-            'hammer-v0': ['top'],
-            'door-v0': ['top'],
             'cheers-v0': ['top'],
-            'pen-v0': ['vil_camera'],
-            'relocate-v0': ['cam1', 'cam2', 'cam3',],
         }
         if cam_list is None:
             cam_list = default_env_to_cam_list[env_name]
         self.env_name = env_name
         reward_rescale_dict = {
-            'hammer-v0': 1/100,
-            'door-v0': 1/20,
             'cheers-v0': 1/20,
-            'pen-v0': 1/50,
-            'relocate-v0': 1/30,
         }
         if reward_rescale:
             self.reward_rescale_factor = reward_rescale_dict[env_name]
@@ -261,7 +253,7 @@ class AdroitEnv:
             height = 256
             width = 256
             latent_dim = 512
-            env = BasicAdroitEnv(env, cameras=cam_list,
+            env = BasicDexterousEnv(env, cameras=cam_list,
                 height=height, width=width, latent_dim=latent_dim, hybrid_state=True, 
                 test_image=test_image, channels_first=False, num_repeats=num_repeats, num_frames=num_frames, encoder_type=env_feature_type, 
                 device=device
@@ -271,7 +263,7 @@ class AdroitEnv:
             width = 84
             latent_dim = height*width*len(cam_list)*num_frames
             # RRL class instance is environment wrapper...
-            env = BasicAdroitEnv(env, cameras=cam_list,
+            env = BasicDexterousEnv(env, cameras=cam_list,
                 height=height, width=width, latent_dim=latent_dim, hybrid_state=True, 
                 test_image=test_image, channels_first=True, num_repeats=num_repeats, num_frames=num_frames, device=device)
         else:
@@ -299,7 +291,7 @@ class AdroitEnv:
         action_spec = self.action_spec()
         action = np.zeros(action_spec.shape, dtype=action_spec.dtype)
 
-        time_step = ExtendedTimeStepAdroit(observation=obs_pixels,
+        time_step = ExtendedTimeStepDexterous(observation=obs_pixels,
                                      observation_sensor=obs_sensor,
                                 step_type=StepType.FIRST,
                                 action=action,
@@ -316,7 +308,7 @@ class AdroitEnv:
         action_spec = self.action_spec()
         action = np.zeros(action_spec.shape, dtype=action_spec.dtype)
 
-        time_step = ExtendedTimeStepAdroit(observation=obs_pixels,
+        time_step = ExtendedTimeStepDexterous(observation=obs_pixels,
                                      observation_sensor=obs_sensor,
                                 step_type=StepType.FIRST,
                                 action=action,
@@ -355,7 +347,7 @@ class AdroitEnv:
 
         reward = reward * self.reward_rescale_factor
 
-        time_step = ExtendedTimeStepAdroit(observation=obs_pixels,
+        time_step = ExtendedTimeStepDexterous(observation=obs_pixels,
                                      observation_sensor=obs_sensor,
                                 step_type=steptype,
                                 action=action,

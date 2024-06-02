@@ -4,7 +4,7 @@
 import gym
 # from abc import ABC
 import numpy as np
-from rrl_local.rrl_encoder import Encoder, IdentityEncoder
+from .rrl_encoder import Encoder, IdentityEncoder
 from PIL import Image
 import torch
 from collections import deque
@@ -51,7 +51,6 @@ class BasicDexterousEnv(gym.Env): # , ABC
         self.test_image = test_image
 
         self.cameras = cameras
-
         self.latent_dim = latent_dim
         self.hybrid_state = hybrid_state
         self.channels_first = channels_first
@@ -71,58 +70,6 @@ class BasicDexterousEnv(gym.Env): # , ABC
         if hybrid_state :
             if self.env_id in _mj_envs:
                 self._env.spec.observation_dim += 24 # Assuming 24 states for dexterous hand.
-
-        self.spec = self._env.spec
-        self.observation_dim = self.spec.observation_dim
-        self.horizon = self._env.env.spec.max_episode_steps
-
-
-class BasicAdroitEnv(gym.Env): # , ABC
-    def __init__(self, env, cameras, latent_dim=512, hybrid_state=True, channels_first=False, 
-    height=84, width=84, test_image=False, num_repeats=1, num_frames=1, encoder_type=None, device=None):
-        self._env = env
-        self.env_id = env.env.unwrapped.spec.id
-        self.device = device
-
-        self._num_repeats = num_repeats
-        self._num_frames = num_frames
-        self._frames = deque([], maxlen=num_frames)
-
-        self.encoder = None
-        self.transforms = None
-        self.encoder_type = encoder_type
-        if encoder_type is not None:
-            self.encoder = make_encoder(encoder=None, encoder_type=self.encoder_type, device=self.device, is_eval=True)
-            self.transforms = self.encoder.get_transform()
-
-        if test_image:
-            print("======================adroit image test mode==============================")
-            print("======================adroit image test mode==============================")
-            print("======================adroit image test mode==============================")
-            print("======================adroit image test mode==============================")
-        self.test_image = test_image
-
-        self.cameras = cameras
-
-        self.latent_dim = latent_dim
-        self.hybrid_state = hybrid_state
-        self.channels_first = channels_first
-        self.height = height
-        self.width = width
-        self.action_space = self._env.action_space
-        self.env_kwargs = {'cameras' : cameras, 'latent_dim' : latent_dim, 'hybrid_state': hybrid_state,
-                           'channels_first' : channels_first, 'height' : height, 'width' : width}
-
-        shape = [3, self.width, self.height]
-        self._observation_space = gym.spaces.Box(
-            low=0, high=255, shape=shape, dtype=np.uint8
-        )
-        self.sim = env.env.sim
-        self._env.spec.observation_dim = latent_dim
-
-        if hybrid_state :
-            if self.env_id in _mj_envs:
-                self._env.spec.observation_dim += 24 # Assuming 24 states for adroit hand.
 
         self.spec = self._env.spec
         self.observation_dim = self.spec.observation_dim
@@ -201,6 +148,7 @@ class BasicAdroitEnv(gym.Env): # , ABC
 
     def get_env_infos(self):
         return self._env.get_env_infos()
+    
     def set_seed(self, seed):
         return self._env.set_seed(seed)
 
@@ -329,10 +277,10 @@ class BasicFrankaEnv(gym.Env):
             self.transforms = self.encoder.get_transform()
 
         if test_image:
-            print("======================adroit image test mode==============================")
-            print("======================adroit image test mode==============================")
-            print("======================adroit image test mode==============================")
-            print("======================adroit image test mode==============================")
+            print("======================dexterous image test mode==============================")
+            print("======================dexterous image test mode==============================")
+            print("======================dexterous image test mode==============================")
+            print("======================dexterous image test mode==============================")
         self.test_image = test_image
 
         self.cameras = cameras
@@ -360,7 +308,7 @@ class BasicFrankaEnv(gym.Env):
 
         if hybrid_state :
             if self.env_id in _mj_envs:
-                self._env.spec.observation_dim += 24 # Assuming 24 states for adroit hand.
+                self._env.spec.observation_dim += 24 # Assuming 24 states for dexterous hand.
 
         self.spec = self._env.spec
         self.observation_dim = self.spec.observation_dim
