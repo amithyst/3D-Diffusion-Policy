@@ -232,7 +232,6 @@ class AdroitEnv:
         default_env_to_cam_list = {
             'hammer-v0': ['top'],
             'door-v0': ['top'],
-            'cheers-v0': ['top'],
             'pen-v0': ['vil_camera'],
             'relocate-v0': ['cam1', 'cam2', 'cam3',],
         }
@@ -242,7 +241,6 @@ class AdroitEnv:
         reward_rescale_dict = {
             'hammer-v0': 1/100,
             'door-v0': 1/20,
-            'cheers-v0': 1/20,
             'pen-v0': 1/50,
             'relocate-v0': 1/30,
         }
