@@ -1,5 +1,5 @@
 # bash scripts/gen_demo_dexterous_num_episodes_10.sh cheers
-
+#修改之处
 cd third_party/VRL3/src
 
 task=${1}

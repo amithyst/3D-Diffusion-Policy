@@ -1,7 +1,7 @@
 name: dexterous_cheers
 
 task_name: cheers
-
+#修改之处
 shape_meta: &shape_meta
   # acceptable types: rgb, low_dim
   obs:

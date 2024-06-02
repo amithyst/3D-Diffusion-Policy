@@ -12,7 +12,7 @@ from diffusion_policy_3d.common.pytorch_util import dict_apply
 from diffusion_policy_3d.env_runner.base_runner import BaseRunner
 import diffusion_policy_3d.common.logger_util as logger_util
 from termcolor import cprint
-
+#修改之处
 
 class DexterousRunner(BaseRunner):
     def __init__(self,
