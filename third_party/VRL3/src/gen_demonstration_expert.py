@@ -4,6 +4,7 @@ import mj_envs
 from mjrl.utils.gym_env import GymEnv
 from rrl_local.rrl_utils import make_basic_env, make_dir
 from adroit import AdroitEnv
+from dexterous import DexterousEnv
 import matplotlib.pyplot as plt
 import argparse
 import os
@@ -45,14 +46,32 @@ def main():
     # load env
     action_repeat = 2
     frame_stack = 1
+    # def create_env():
+    #     env = AdroitEnv(env_name=args.env_name+'-v0', test_image=False, num_repeats=action_repeat,
+    #                     num_frames=frame_stack, env_feature_type='pixels',
+    #                                         device='cuda', reward_rescale=True)
+    #     env = MujocoPointcloudWrapperAdroit(env=env, env_name='adroit_'+args.env_name,#这里如果用adroit要修改adroit才行
+    #                                          use_point_crop=args.use_point_crop)
+    #     return env 
+    # num_episodes = args.num_episodes
+    # save_dir = os.path.join(args.root_dir, 'adroit_'+args.env_name+'_expert.zarr')
+
     def create_env():
+        # env = AdroitEnv(env_name=args.env_name+'-v0', test_image=False, num_repeats=action_repeat,
+        #                 num_frames=frame_stack, env_feature_type='pixels',
+        #                                     device='cuda', reward_rescale=True)
+        # env = MujocoPointcloudWrapperAdroit(env=env, env_name='dexterous_'+args.env_name,
+        #                                      use_point_crop=args.use_point_crop)
         env = AdroitEnv(env_name=args.env_name+'-v0', test_image=False, num_repeats=action_repeat,
                         num_frames=frame_stack, env_feature_type='pixels',
                                             device='cuda', reward_rescale=True)
-        env = MujocoPointcloudWrapperAdroit(env=env, env_name='adroit_'+args.env_name, use_point_crop=args.use_point_crop)
-        return env
+        env = MujocoPointcloudWrapperAdroit(env=env, env_name='dexterous_'+args.env_name,
+                                             use_point_crop=args.use_point_crop)
+        return env 
     num_episodes = args.num_episodes
-    save_dir = os.path.join(args.root_dir, 'adroit_'+args.env_name+'_expert.zarr')
+    save_dir = os.path.join(args.root_dir, 'dexterous_'+args.env_name+'_expert.zarr')
+
+
     if os.path.exists(save_dir):
         cprint('Data already exists at {}'.format(save_dir), 'red')
         cprint("If you want to overwrite, delete the existing directory first.", "red")
