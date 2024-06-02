@@ -8,14 +8,14 @@ from diffusion_policy_3d.common.sampler import (
     SequenceSampler, get_val_mask, downsample_mask)
 from diffusion_policy_3d.model.common.normalizer import LinearNormalizer, SingleFieldLinearNormalizer
 from diffusion_policy_3d.dataset.base_dataset import BaseDataset
-#修改之处
+
 class DexterousDataset(BaseDataset):
     def __init__(self,
             zarr_path, 
             horizon=1,
             pad_before=0,
             pad_after=0,
-            seed=42,
+            seed=41,
             val_ratio=0.0,
             max_train_episodes=None,
             task_name=None,
